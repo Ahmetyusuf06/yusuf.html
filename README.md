@@ -1,1174 +1,767 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulse — Haber</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>WordWise — Learn English with Riddles</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0a0a12;
-    --bg2: #12121e;
-    --bg3: #1a1a2e;
-    --card: #16162a;
-    --accent1: #ff4d6d;
-    --accent2: #7b5ea7;
-    --accent3: #00d4aa;
-    --accent4: #ffa94d;
-    --text: #f0eeff;
-    --muted: #8884a8;
-    --border: rgba(120, 100, 200, 0.18);
+    --cream: #FDF6EC;
+    --gold: #C8963E;
+    --gold-light: #F0C97A;
+    --dark: #1A1508;
+    --dark2: #2E2410;
+    --green: #2D6A4F;
+    --green-light: #74C69D;
+    --red: #C0392B;
+    --blue: #2472A4;
+    --muted: #8A7A5A;
+    --card-bg: #FFFDF7;
+    --border: #E8D9BC;
   }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    background: var(--cream);
+    color: var(--dark);
     min-height: 100vh;
-    overflow-x: hidden;
   }
 
-  .bg-orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .orb1 { width: 500px; height: 500px; background: rgba(123,94,167,0.15); top: -100px; right: -100px; }
-  .orb2 { width: 400px; height: 400px; background: rgba(255,77,109,0.1); bottom: 0; left: -80px; }
-  .orb3 { width: 300px; height: 300px; background: rgba(0,212,170,0.08); top: 50%; left: 40%; }
-
-  .wrapper { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
-
-  /* ── HEADER ── */
+  /* HEADER */
   header {
+    background: var(--dark);
+    padding: 20px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 28px 0 20px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 32px;
+    border-bottom: 3px solid var(--gold);
   }
   .logo {
     font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--accent1), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    cursor: pointer;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: -0.5px;
   }
-  .logo span { -webkit-text-fill-color: var(--accent3); }
-  .nav { display: flex; gap: 28px; align-items: center; }
-  .nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 13px;
+  .logo span { color: #fff; }
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+    font-size: 14px;
+  }
+  .score-val {
+    font-size: 22px;
     font-weight: 500;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    cursor: pointer;
-  }
-  .nav a:hover { color: var(--text); }
-  .nav a.active { color: var(--accent3); }
-  .date-chip {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-  }
-
-  /* ── HAVA DURUMU ── */
-  .weather-strip {
-    background: linear-gradient(135deg, #1a1040 0%, #0e1f40 50%, #0a2a30 100%);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px 32px;
-    margin-bottom: 36px;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    overflow: hidden;
-    position: relative;
-  }
-  .weather-strip::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(0,150,255,0.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .weather-main {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex: 0 0 auto;
-    padding-right: 36px;
-    border-right: 1px solid var(--border);
-  }
-  .weather-icon { font-size: 52px; line-height: 1; }
-  .weather-city { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; }
-  .weather-temp { font-size: 44px; font-weight: 300; line-height: 1; color: #e0f4ff; }
-  .weather-desc { font-size: 13px; color: #7ab8d4; margin-top: 2px; }
-  .weather-details {
-    display: flex;
-    gap: 0;
-    flex: 1;
-    padding: 0 36px;
-  }
-  .wd-item {
-    flex: 1;
-    text-align: center;
-    padding: 8px 12px;
-    border-right: 1px solid rgba(255,255,255,0.05);
-  }
-  .wd-item:last-child { border-right: none; }
-  .wd-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 6px; }
-  .wd-value { font-size: 20px; font-weight: 600; color: var(--text); }
-  .wd-unit { font-size: 11px; color: var(--muted); }
-  .weather-forecast {
-    display: flex;
-    gap: 12px;
-    padding-left: 36px;
-    border-left: 1px solid var(--border);
-  }
-  .fc-day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    transition: background 0.2s;
-    cursor: default;
-  }
-  .fc-day:hover { background: rgba(255,255,255,0.05); }
-  .fc-day.today { background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.2); }
-  .fc-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
-  .fc-icon { font-size: 20px; }
-  .fc-temp { font-size: 14px; font-weight: 500; color: var(--text); }
-
-  /* ── SON DAKİKA TICKER ── */
-  .ticker-wrap {
-    background: var(--accent1);
-    border-radius: 10px;
-    padding: 10px 0;
-    margin-bottom: 36px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  .ticker-label {
-    background: rgba(0,0,0,0.3);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 0 16px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    border-right: 1px solid rgba(255,255,255,0.2);
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  .ticker-overflow { overflow: hidden; flex: 1; }
-  .ticker-track {
-    display: flex;
-    animation: ticker 30s linear infinite;
-    white-space: nowrap;
-  }
-  .ticker-item {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 0 40px;
-    position: relative;
-  }
-  .ticker-item::after {
-    content: '◆';
-    position: absolute;
-    right: 10px;
-    font-size: 8px;
-    opacity: 0.6;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-  /* ── ANA IZGARA ── */
-  .grid-main {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 24px;
-    margin-bottom: 36px;
-  }
-
-  /* Hero kart */
-  .hero-card {
-    grid-row: 1 / 3;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    text-decoration: none;
-    display: block;
-  }
-  .hero-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 24px 60px rgba(123,94,167,0.25);
-  }
-  .hero-img {
-    width: 100%;
-    height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-img-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #1e1050 0%, #102050 40%, #082030 100%); }
-  .hero-img-shape { position: absolute; border-radius: 50%; }
-  .shape1 { width: 200px; height: 200px; background: rgba(123,94,167,0.3); top: -30px; right: 40px; filter: blur(40px); }
-  .shape2 { width: 150px; height: 150px; background: rgba(0,212,170,0.2); bottom: 20px; left: 30px; filter: blur(30px); }
-  .hero-emoji { font-size: 80px; position: relative; z-index: 1; }
-  .hero-body { padding: 24px 28px; }
-  .hero-cat {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: var(--accent3);
-    border: 1px solid var(--accent3);
-    border-radius: 20px;
-    padding: 3px 12px;
-    margin-bottom: 14px;
-  }
-  .hero-title {
+    color: var(--gold-light);
     font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--text);
-    margin-bottom: 12px;
   }
-  .hero-summary { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 18px; }
-  .hero-meta { display: flex; gap: 16px; align-items: center; }
-  .meta-time { font-size: 12px; color: var(--muted); }
-  .meta-read { font-size: 12px; color: var(--accent2); font-weight: 500; }
-
-  /* Yan kartlar */
-  .side-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    cursor: pointer;
-    transition: transform 0.25s, border-color 0.25s;
-    text-decoration: none;
-    display: block;
-  }
-  .side-card:hover { transform: translateY(-3px); border-color: var(--accent2); }
-  .side-cat {
-    font-size: 10px;
-    font-weight: 600;
+  .level-badge {
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 14px;
+    border-radius: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    padding: 2px 10px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    display: inline-block;
-  }
-  .cat-tech { background: rgba(123,94,167,0.2); color: var(--accent2); }
-  .cat-fin  { background: rgba(255,169,77,0.15); color: var(--accent4); }
-  .cat-sci  { background: rgba(0,212,170,0.15); color: var(--accent3); }
-  .cat-pol  { background: rgba(255,77,109,0.15); color: var(--accent1); }
-  .cat-eco  { background: rgba(100,200,100,0.15); color: #7de87d; }
-  .side-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.4;
-    color: var(--text);
-    margin-bottom: 10px;
-  }
-  .side-meta { font-size: 11px; color: var(--muted); }
-  .side-card-img {
-    width: 100%;
-    height: 100px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-  }
-  .img-tech { background: linear-gradient(135deg, #1a0e30, #0e1040); }
-  .img-fin  { background: linear-gradient(135deg, #1a1000, #201800); }
-
-  /* ── BÖLÜM BAŞLIĞI ── */
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
   }
 
-  /* ── CANLI KARTLAR ── */
-  .live-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 36px;
-  }
-  .live-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px 22px;
+  /* NAV TABS */
+  .tabs {
     display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    text-decoration: none;
+    background: var(--dark2);
+    padding: 0 40px;
+    gap: 4px;
   }
-  .live-card:hover { border-color: var(--accent1); }
-  .live-badge {
-    background: var(--accent1);
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 3px 8px;
-    border-radius: 6px;
-    animation: pulse-live 1.5s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  @keyframes pulse-live { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .live-content { flex: 1; }
-  .live-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .live-time  { font-size: 11px; color: var(--muted); }
-  .live-views { font-size: 12px; color: var(--accent4); font-weight: 500; }
-
-  /* ── HABER KART IZGARA ── */
-  .card-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-bottom: 36px;
-  }
-  .news-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.25s, box-shadow 0.25s;
-    text-decoration: none;
-    display: block;
-  }
-  .news-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
-  }
-  .news-card-thumb {
-    height: 110px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 38px;
-  }
-  .thumb-sci { background: linear-gradient(135deg, #082028, #062018); }
-  .thumb-pol { background: linear-gradient(135deg, #280810, #200612); }
-  .thumb-eco { background: linear-gradient(135deg, #082008, #061810); }
-  .thumb-spt { background: linear-gradient(135deg, #201008, #181006); }
-  .news-card-body { padding: 14px 16px; }
-  .news-card-title {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.45;
-    color: var(--text);
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .news-card-meta { font-size: 11px; color: var(--muted); }
-
-  /* ── SAYFA SEKMELERİ ── */
-  .page-nav {
-    display: flex;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 32px;
-  }
-  .page-tab {
-    padding: 10px 20px;
-    font-size: 13px;
+  .tab {
+    padding: 14px 22px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--muted);
     cursor: pointer;
-    border: none;
-    border-bottom: 2px solid transparent;
-    background: none;
-    font-family: 'DM Sans', sans-serif;
-    letter-spacing: 0.3px;
+    border-bottom: 3px solid transparent;
     transition: all 0.2s;
+    user-select: none;
   }
-  .page-tab:hover { color: var(--text); }
-  .page-tab.active { color: var(--accent3); border-bottom-color: var(--accent3); }
+  .tab:hover { color: #fff; }
+  .tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
 
-  /* ── SAYFA GÖSTERİMİ ── */
+  /* MAIN LAYOUT */
+  main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+  /* SECTION TITLE */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 900;
+    color: var(--dark);
+    margin-bottom: 28px;
+    line-height: 1.1;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+
+  /* RIDDLE CARD */
+  .riddle-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .riddle-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    font-size: 120px;
+    font-family: 'Playfair Display', serif;
+    color: var(--gold-light);
+    opacity: 0.3;
+    line-height: 1;
+  }
+  .riddle-number {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .riddle-category {
+    display: inline-block;
+    background: var(--gold-light);
+    color: var(--dark2);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 12px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+  }
+  .riddle-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .riddle-hint {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    padding: 10px 16px;
+    background: #F5EDD8;
+    border-radius: 8px;
+    border-left: 3px solid var(--gold);
+    display: none;
+  }
+  .riddle-hint.shown { display: block; }
+
+  /* ANSWER INPUT */
+  .answer-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .answer-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--dark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .answer-input:focus { border-color: var(--gold); }
+  .answer-input.correct { border-color: var(--green); background: #EAFAF1; }
+  .answer-input.wrong { border-color: var(--red); background: #FDECEA; animation: shake 0.3s; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-hint {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-hint:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 16px;
+    font-size: 15px;
+    font-weight: 500;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .feedback.show { display: flex; }
+  .feedback.correct-fb { color: var(--green); }
+  .feedback.wrong-fb { color: var(--red); }
+  .feedback-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .feedback.correct-fb .feedback-icon { background: var(--green); color: #fff; }
+  .feedback.wrong-fb .feedback-icon { background: var(--red); color: #fff; }
+  .translation {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* WORD MATCH GAME */
+  .word-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .word-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .word-card:hover { border-color: var(--gold); }
+  .word-card.selected { border-color: var(--gold); background: #FFF8E8; color: var(--gold); }
+  .word-card.matched { border-color: var(--green); background: #EAFAF1; color: var(--green); pointer-events: none; }
+  .word-card.wrong-match { border-color: var(--red); background: #FDECEA; animation: shake 0.3s; }
+
+  /* PROGRESS */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .progress-text { font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+  /* FILL IN BLANK */
+  .fill-sentence {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .blank-input {
+    display: inline-block;
+    border: none;
+    border-bottom: 3px solid var(--gold);
+    background: transparent;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--blue);
+    width: 140px;
+    text-align: center;
+    outline: none;
+    padding: 0 4px;
+  }
+  .blank-input.correct-blank { border-bottom-color: var(--green); color: var(--green); }
+  .blank-input.wrong-blank { border-bottom-color: var(--red); color: var(--red); animation: shake 0.3s; }
+  .word-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .word-option {
+    padding: 8px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    background: var(--card-bg);
+    cursor: pointer;
+    transition: all 0.18s;
+    font-weight: 500;
+  }
+  .word-option:hover { border-color: var(--gold); background: #FFF8E8; }
+  .word-option.used { opacity: 0.35; pointer-events: none; text-decoration: line-through; }
+
+  /* FOOTER */
+  .section-footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* HIDDEN */
   .page { display: none; }
   .page.active { display: block; }
 
-  /* ── EKONOMİ GÖSTERGELERİ ── */
-  .market-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .market-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px 18px;
-  }
-  .market-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-  .market-value { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .market-change-up   { font-size: 13px; color: #7de87d; }
-  .market-change-down { font-size: 13px; color: var(--accent1); }
-
-  /* ── MAKALE SAYFASI ── */
-  .article-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--muted);
-    font-size: 13px;
-    cursor: pointer;
-    margin-bottom: 28px;
-    background: none;
+  /* NEXT BTN */
+  .next-btn-row { text-align: right; margin-top: 12px; }
+  .btn-next {
+    background: var(--dark);
+    color: var(--gold-light);
+    padding: 11px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
     border: none;
-    padding: 0;
-    transition: color 0.2s;
+    cursor: pointer;
     font-family: 'DM Sans', sans-serif;
+    transition: background 0.18s;
   }
-  .article-back:hover { color: var(--text); }
-  .article-hero {
-    width: 100%;
-    height: 340px;
-    border-radius: 20px;
-    margin-bottom: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 100px;
-    position: relative;
-    overflow: hidden;
-  }
-  .article-hero-bg { position: absolute; inset: 0; }
-  .article-hero-emoji { position: relative; z-index: 1; }
-  .article-content { max-width: 740px; }
-  .article-cat {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    border-radius: 20px;
-    padding: 3px 12px;
-    margin-bottom: 16px;
-  }
-  .article-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 38px;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--text);
-    margin-bottom: 20px;
-  }
-  .article-subtitle { font-size: 18px; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
-  .article-meta {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 36px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--border);
-  }
-  .article-author { display: flex; align-items: center; gap: 10px; }
-  .author-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent2), var(--accent1));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: white;
-    flex-shrink: 0;
-  }
-  .author-name { font-size: 13px; font-weight: 500; color: var(--text); }
-  .author-date { font-size: 11px; color: var(--muted); }
-  .article-body { font-size: 16px; line-height: 1.85; color: rgba(240,238,255,0.85); }
-  .article-body p { margin-bottom: 20px; }
-  .article-body strong { color: var(--text); font-weight: 600; }
-  .article-quote {
-    border-left: 3px solid var(--accent2);
-    padding: 16px 24px;
-    margin: 28px 0;
-    background: var(--bg3);
-    border-radius: 0 12px 12px 0;
-    font-size: 17px;
-    font-style: italic;
-    color: var(--text);
-    line-height: 1.6;
-  }
+  .btn-next:hover { background: var(--dark2); }
 
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 28px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  /* CONGRATS */
+  .congrats-box {
+    background: var(--card-bg);
+    border: 2px solid var(--gold);
+    border-radius: 18px;
+    padding: 48px 40px;
+    text-align: center;
+    display: none;
   }
-  .footer-logo {
+  .congrats-box.show { display: block; }
+  .congrats-icon { font-size: 56px; margin-bottom: 16px; }
+  .congrats-title {
     font-family: 'Playfair Display', serif;
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 900;
-    color: var(--muted);
+    color: var(--gold);
+    margin-bottom: 10px;
   }
-  .footer-text { font-size: 12px; color: var(--muted); }
-  .footer-links { font-size: 12px; color: var(--muted); }
+  .congrats-sub { font-size: 16px; color: var(--muted); margin-bottom: 28px; }
 </style>
 </head>
 <body>
 
-<!-- Arka plan efektleri -->
-<div class="bg-orb orb1"></div>
-<div class="bg-orb orb2"></div>
-<div class="bg-orb orb3"></div>
-
-<div class="wrapper">
-
-  <!-- ═══════════════════════════════════
-       HEADER
-  ═══════════════════════════════════ -->
-  <header>
-    <div class="logo" onclick="showPage('home')">Puls<span>e</span></div>
-    <nav class="nav">
-      <a id="nav-home"      onclick="showPage('home')"      class="active">Anasayfa</a>
-      <a id="nav-gundem"    onclick="showPage('gundem')"            >Gündem</a>
-      <a id="nav-teknoloji" onclick="showPage('teknoloji')"         >Teknoloji</a>
-      <a id="nav-ekonomi"   onclick="showPage('ekonomi')"           >Ekonomi</a>
-      <a id="nav-spor"      onclick="showPage('spor')"              >Spor</a>
-    </nav>
-    <div class="date-chip" id="live-date"></div>
-  </header>
-
-  <!-- ═══════════════════════════════════
-       SAYFA: ANASAYFA
-  ═══════════════════════════════════ -->
-  <div id="page-home" class="page active">
-
-    <!-- Hava Durumu -->
-    <div class="weather-strip">
-      <div class="weather-main">
-        <div class="weather-icon">⛅</div>
-        <div>
-          <div class="weather-city">📍 Ankara</div>
-          <div class="weather-temp">18°</div>
-          <div class="weather-desc">Az Bulutlu</div>
-        </div>
-      </div>
-      <div class="weather-details">
-        <div class="wd-item">
-          <div class="wd-label">Nem</div>
-          <div class="wd-value">52<span class="wd-unit">%</span></div>
-        </div>
-        <div class="wd-item">
-          <div class="wd-label">Rüzgar</div>
-          <div class="wd-value">14<span class="wd-unit"> km/s</span></div>
-        </div>
-        <div class="wd-item">
-          <div class="wd-label">UV İndeksi</div>
-          <div class="wd-value">6<span class="wd-unit"> orta</span></div>
-        </div>
-        <div class="wd-item">
-          <div class="wd-label">Görüş</div>
-          <div class="wd-value">10<span class="wd-unit"> km</span></div>
-        </div>
-        <div class="wd-item">
-          <div class="wd-label">Basınç</div>
-          <div class="wd-value">1013<span class="wd-unit"> hPa</span></div>
-        </div>
-      </div>
-      <div class="weather-forecast">
-        <div class="fc-day today">
-          <div class="fc-name">Bug.</div>
-          <div class="fc-icon">⛅</div>
-          <div class="fc-temp">18°</div>
-        </div>
-        <div class="fc-day">
-          <div class="fc-name">Cmt</div>
-          <div class="fc-icon">🌤️</div>
-          <div class="fc-temp">21°</div>
-        </div>
-        <div class="fc-day">
-          <div class="fc-name">Paz</div>
-          <div class="fc-icon">☀️</div>
-          <div class="fc-temp">24°</div>
-        </div>
-        <div class="fc-day">
-          <div class="fc-name">Pzt</div>
-          <div class="fc-icon">🌧️</div>
-          <div class="fc-temp">15°</div>
-        </div>
-        <div class="fc-day">
-          <div class="fc-name">Sal</div>
-          <div class="fc-icon">⛈️</div>
-          <div class="fc-temp">13°</div>
-        </div>
-      </div>
+<header>
+  <div class="logo">Word<span>Wise</span></div>
+  <div class="score-bar">
+    <div>
+      <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:2px">Score</div>
+      <div class="score-val" id="score-display">0</div>
     </div>
+    <div class="level-badge" id="level-display">Beginner</div>
+  </div>
+</header>
 
-    <!-- Son Dakika Ticker -->
-    <div class="ticker-wrap">
-      <div class="ticker-label">🔴 SON DAKİKA</div>
-      <div class="ticker-overflow">
-        <div class="ticker-track">
-          <span class="ticker-item">Merkez Bankası faiz kararını açıkladı</span>
-          <span class="ticker-item">Türkiye-AB zirvesi Brüksel'de başladı</span>
-          <span class="ticker-item">İstanbul'da deprem tatbikatı tamamlandı</span>
-          <span class="ticker-item">Borsa İstanbul rekor tazeledi</span>
-          <span class="ticker-item">Yapay zeka yasası TBMM'de oylandı</span>
-          <span class="ticker-item">Galatasaray şampiyonluk kupasını kaldırdı</span>
-          <span class="ticker-item">Merkez Bankası faiz kararını açıkladı</span>
-          <span class="ticker-item">Türkiye-AB zirvesi Brüksel'de başladı</span>
-          <span class="ticker-item">İstanbul'da deprem tatbikatı tamamlandı</span>
-          <span class="ticker-item">Borsa İstanbul rekor tazeledi</span>
-          <span class="ticker-item">Yapay zeka yasası TBMM'de oylandı</span>
-          <span class="ticker-item">Galatasaray şampiyonluk kupasını kaldırdı</span>
-        </div>
-      </div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('riddles')">🧩 Riddles</div>
+  <div class="tab" onclick="switchTab('match')">🔗 Word Match</div>
+  <div class="tab" onclick="switchTab('fill')">✏️ Fill in the Blank</div>
+</div>
+
+<main>
+
+  <!-- ===== RIDDLES PAGE ===== -->
+  <div class="page active" id="page-riddles">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="riddle-progress" style="width:0%"></div></div>
+      <div class="progress-text" id="riddle-progress-text">0 / 6</div>
     </div>
+    <div class="section-label">English Riddles</div>
+    <div class="section-title">Think & <em>Guess</em> the Word</div>
 
-    <!-- Ana Izgara: Hero + 2 yan kart -->
-    <div class="grid-main">
-      <a class="hero-card" href="#" onclick="showArticle('ai-yasa');return false;">
-        <div class="hero-img">
-          <div class="hero-img-bg"></div>
-          <div class="hero-img-shape shape1"></div>
-          <div class="hero-img-shape shape2"></div>
-          <span class="hero-emoji">🤖</span>
-        </div>
-        <div class="hero-body">
-          <span class="hero-cat">Teknoloji</span>
-          <div class="hero-title">Yapay Zeka Yasası Meclisten Geçti: Türkiye'de Bir İlk</div>
-          <div class="hero-summary">Uzun süredir tartışılan yapay zeka düzenlemesi nihayet yasalaştı. Peki bu yasa şirketleri ve bireyleri nasıl etkileyecek? Uzmanlar değerlendirdi.</div>
-          <div class="hero-meta">
-            <span class="meta-time">2 saat önce</span>
-            <span class="meta-read">6 dk okuma</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="side-card" href="#" onclick="showArticle('borsa-rekor');return false;">
-        <div class="side-card-img img-fin">💹</div>
-        <span class="side-cat cat-fin">Ekonomi</span>
-        <div class="side-title">Borsa İstanbul Tarihi Zirveyi Gördü</div>
-        <div class="side-meta">45 dk önce · 4 dk okuma</div>
-      </a>
-
-      <a class="side-card" href="#" onclick="showArticle('deprem-tatbikat');return false;">
-        <div class="side-card-img img-tech">🏗️</div>
-        <span class="side-cat cat-sci">Bilim</span>
-        <div class="side-title">İstanbul Deprem Tatbikatında 3 Milyon Kişi Katıldı</div>
-        <div class="side-meta">1 saat önce · 3 dk okuma</div>
-      </a>
-    </div>
-
-    <!-- Canlı Takip -->
-    <div class="section-title">Canlı Takip</div>
-    <div class="live-row">
-      <a class="live-card" href="#" onclick="showArticle('ab-zirve');return false;">
-        <div class="live-badge">CANLI</div>
-        <div class="live-content">
-          <div class="live-title">Türkiye-AB Zirvesi: Müzakereler Sürüyor</div>
-          <div class="live-time">Brüksel · 3 saattir yayında</div>
-        </div>
-        <div class="live-views">41.2K izleyici</div>
-      </a>
-      <a class="live-card" href="#" onclick="showArticle('gs-kupa');return false;">
-        <div class="live-badge">CANLI</div>
-        <div class="live-content">
-          <div class="live-title">Galatasaray Şampiyonluk Törenini İzle</div>
-          <div class="live-time">Ali Sami Yen · 1 saattir yayında</div>
-        </div>
-        <div class="live-views">128.7K izleyici</div>
-      </a>
-    </div>
-
-    <!-- Günün Haberleri -->
-    <div class="section-title">Günün Haberleri</div>
-    <div class="card-row">
-      <a class="news-card" href="#" onclick="showArticle('mars-kesfet');return false;">
-        <div class="news-card-thumb thumb-sci">🔭</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-sci" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Uzay</span>
-          <div class="news-card-title">NASA Mars'ta Su İzleri Bulduğunu Duyurdu</div>
-          <div class="news-card-meta">3 saat önce · 5 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('secim-anket');return false;">
-        <div class="news-card-thumb thumb-pol">🗳️</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-pol" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Siyaset</span>
-          <div class="news-card-title">Son Seçim Anketi: Sürpriz Sonuçlar Açıklandı</div>
-          <div class="news-card-meta">5 saat önce · 3 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('yesil-enerji');return false;">
-        <div class="news-card-thumb thumb-eco">🌿</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-eco" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Çevre</span>
-          <div class="news-card-title">Türkiye Yeşil Enerji Üretiminde Rekor Kırdı</div>
-          <div class="news-card-meta">6 saat önce · 4 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('galatasaray');return false;">
-        <div class="news-card-thumb thumb-spt">⚽</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-pol" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Spor</span>
-          <div class="news-card-title">Galatasaray 5. Kez Şampiyon: Taraftarlar Sokaklara Döküldü</div>
-          <div class="news-card-meta">7 saat önce · 2 dk</div>
-        </div>
-      </a>
-    </div>
-
-  </div><!-- /page-home -->
-
-  <!-- ═══════════════════════════════════
-       SAYFA: GÜNDEM
-  ═══════════════════════════════════ -->
-  <div id="page-gundem" class="page">
-    <div class="page-nav">
-      <button class="page-tab active">Tümü</button>
-      <button class="page-tab">Türkiye</button>
-      <button class="page-tab">Dünya</button>
-      <button class="page-tab">Ekonomi</button>
-    </div>
-    <div class="card-row" style="grid-template-columns:repeat(3,1fr)">
-      <a class="news-card" href="#" onclick="showArticle('ab-zirve');return false;">
-        <div class="news-card-thumb thumb-pol">🌍</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-pol" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Dış Politika</span>
-          <div class="news-card-title">Türkiye-AB Zirvesinde Tarihi Adım</div>
-          <div class="news-card-meta">2 saat önce · 5 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('deprem-tatbikat');return false;">
-        <div class="news-card-thumb thumb-sci">🏙️</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-sci" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">İstanbul</span>
-          <div class="news-card-title">3 Milyonluk Deprem Tatbikatı Tamamlandı</div>
-          <div class="news-card-meta">3 saat önce · 3 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('secim-anket');return false;">
-        <div class="news-card-thumb thumb-pol">📊</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-pol" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Siyaset</span>
-          <div class="news-card-title">Muhalefet Bloğu Anketlerde Yükseliyor</div>
-          <div class="news-card-meta">5 saat önce · 4 dk</div>
-        </div>
-      </a>
+    <div id="riddle-container"></div>
+    <div class="congrats-box" id="riddle-congrats">
+      <div class="congrats-icon">🎉</div>
+      <div class="congrats-title">Brilliant!</div>
+      <div class="congrats-sub">You solved all riddles. Try the Word Match next!</div>
+      <button class="btn btn-primary" onclick="switchTab('match')">Go to Word Match →</button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════
-       SAYFA: TEKNOLOJİ
-  ═══════════════════════════════════ -->
-  <div id="page-teknoloji" class="page">
-    <div class="page-nav">
-      <button class="page-tab active">Tümü</button>
-      <button class="page-tab">Yapay Zeka</button>
-      <button class="page-tab">Uzay</button>
-      <button class="page-tab">Siber</button>
-    </div>
-    <div class="card-row" style="grid-template-columns:repeat(3,1fr)">
-      <a class="news-card" href="#" onclick="showArticle('ai-yasa');return false;">
-        <div class="news-card-thumb" style="background:linear-gradient(135deg,#1a0e30,#0e1040)">🤖</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-tech" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Yapay Zeka</span>
-          <div class="news-card-title">Yapay Zeka Yasası Meclisten Geçti</div>
-          <div class="news-card-meta">2 saat önce · 6 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('mars-kesfet');return false;">
-        <div class="news-card-thumb thumb-sci">🚀</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-sci" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Uzay</span>
-          <div class="news-card-title">Mars'ta Su İzleri Bulundu</div>
-          <div class="news-card-meta">3 saat önce · 5 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#" onclick="showArticle('yesil-enerji');return false;">
-        <div class="news-card-thumb thumb-eco">⚡</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-eco" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Enerji</span>
-          <div class="news-card-title">Güneş Enerjisinde Rekor Üretim</div>
-          <div class="news-card-meta">6 saat önce · 4 dk</div>
-        </div>
-      </a>
+  <!-- ===== WORD MATCH PAGE ===== -->
+  <div class="page" id="page-match">
+    <div class="section-label">Word Match</div>
+    <div class="section-title">Match English — <em>Turkish</em></div>
+    <div id="match-container"></div>
+    <div class="congrats-box" id="match-congrats">
+      <div class="congrats-icon">⭐</div>
+      <div class="congrats-title">Perfect Match!</div>
+      <div class="congrats-sub">All pairs matched correctly!</div>
+      <button class="btn btn-primary" onclick="switchTab('fill')">Try Fill in the Blank →</button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════
-       SAYFA: EKONOMİ
-  ═══════════════════════════════════ -->
-  <div id="page-ekonomi" class="page">
-    <div class="page-nav">
-      <button class="page-tab active">Tümü</button>
-      <button class="page-tab">Borsa</button>
-      <button class="page-tab">Döviz</button>
-      <button class="page-tab">Emtia</button>
+  <!-- ===== FILL IN BLANK PAGE ===== -->
+  <div class="page" id="page-fill">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="fill-progress" style="width:0%"></div></div>
+      <div class="progress-text" id="fill-progress-text">0 / 5</div>
     </div>
-    <div class="market-grid">
-      <div class="market-card">
-        <div class="market-label">BIST 100</div>
-        <div class="market-value">10.847</div>
-        <div class="market-change-up">▲ +2.14%</div>
-      </div>
-      <div class="market-card">
-        <div class="market-label">USD/TRY</div>
-        <div class="market-value">32.41</div>
-        <div class="market-change-down">▼ -0.38%</div>
-      </div>
-      <div class="market-card">
-        <div class="market-label">Altın (gr)</div>
-        <div class="market-value">3.218₺</div>
-        <div class="market-change-up">▲ +0.91%</div>
-      </div>
-      <div class="market-card">
-        <div class="market-label">Petrol (WTI)</div>
-        <div class="market-value">$82.4</div>
-        <div class="market-change-up">▲ +1.20%</div>
-      </div>
-    </div>
-    <div class="card-row" style="grid-template-columns:repeat(3,1fr)">
-      <a class="news-card" href="#" onclick="showArticle('borsa-rekor');return false;">
-        <div class="news-card-thumb img-fin">💹</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-fin" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Borsa</span>
-          <div class="news-card-title">BIST Tarihi Zirveyi Test Ediyor</div>
-          <div class="news-card-meta">45 dk önce · 4 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#">
-        <div class="news-card-thumb" style="background:linear-gradient(135deg,#1a1000,#201800)">🏦</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-fin" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Merkez Bankası</span>
-          <div class="news-card-title">Faiz Sabit Kaldı, Enflasyon Beklentisi Revize Edildi</div>
-          <div class="news-card-meta">1 saat önce · 5 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#">
-        <div class="news-card-thumb" style="background:linear-gradient(135deg,#081820,#040c18)">📈</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-fin" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Yatırım</span>
-          <div class="news-card-title">Yabancı Yatırımcı Türk Piyasalarına Dönüyor</div>
-          <div class="news-card-meta">2 saat önce · 3 dk</div>
-        </div>
-      </a>
+    <div class="section-label">Fill in the Blank</div>
+    <div class="section-title">Complete the <em>Sentence</em></div>
+    <div id="fill-container"></div>
+    <div class="congrats-box" id="fill-congrats">
+      <div class="congrats-icon">🏆</div>
+      <div class="congrats-title">You're amazing!</div>
+      <div class="congrats-sub">All sentences completed. Keep practising!</div>
+      <button class="btn btn-primary" onclick="restartAll()">Start Over 🔄</button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════
-       SAYFA: SPOR
-  ═══════════════════════════════════ -->
-  <div id="page-spor" class="page">
-    <div class="page-nav">
-      <button class="page-tab active">Futbol</button>
-      <button class="page-tab">Basketbol</button>
-      <button class="page-tab">Tenis</button>
-      <button class="page-tab">Diğer</button>
-    </div>
-    <div class="card-row" style="grid-template-columns:repeat(3,1fr)">
-      <a class="news-card" href="#" onclick="showArticle('galatasaray');return false;">
-        <div class="news-card-thumb thumb-spt">🏆</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-pol" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Süper Lig</span>
-          <div class="news-card-title">Galatasaray 5. Kez Şampiyon Oldu</div>
-          <div class="news-card-meta">7 saat önce · 2 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#">
-        <div class="news-card-thumb thumb-spt">⚽</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-pol" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Milli Takım</span>
-          <div class="news-card-title">A Milli Takım Kadrosu Açıklandı</div>
-          <div class="news-card-meta">4 saat önce · 3 dk</div>
-        </div>
-      </a>
-      <a class="news-card" href="#">
-        <div class="news-card-thumb" style="background:linear-gradient(135deg,#181020,#100818)">🏀</div>
-        <div class="news-card-body">
-          <span class="side-cat cat-tech" style="font-size:10px;padding:2px 8px;margin-bottom:8px;">Euroleague</span>
-          <div class="news-card-title">Efes Final Four'a Yükseldi</div>
-          <div class="news-card-meta">5 saat önce · 4 dk</div>
-        </div>
-      </a>
-    </div>
-  </div>
+  <div class="section-footer">WordWise · Learn English through Play · 🇬🇧</div>
+</main>
 
-  <!-- ═══════════════════════════════════
-       SAYFA: MAKALE DETAY
-  ═══════════════════════════════════ -->
-  <div id="page-article" class="page">
-    <button class="article-back" onclick="goBack()">← Geri Dön</button>
-    <div id="article-content"></div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">Pulse</div>
-    <div class="footer-text">© 2026 Pulse Medya · Tüm hakları saklıdır</div>
-    <div class="footer-links">Gizlilik · Künye · İletişim</div>
-  </footer>
-
-</div><!-- /wrapper -->
-
-<!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════════════════════════ -->
 <script>
-/* ─── Makale veritabanı ─── */
-const articles = {
-  'ai-yasa': {
-    emoji: '🤖',
-    heroBg: 'linear-gradient(135deg, #1e1050 0%, #102050 40%, #082030 100%)',
-    cat: 'Teknoloji', catClass: 'cat-tech',
-    title: 'Yapay Zeka Yasası Meclisten Geçti: Türkiye\'de Bir İlk',
-    subtitle: 'Uzun süredir tartışılan yapay zeka düzenlemesi nihayet yasalaştı.',
-    author: 'Zeynep Arslan', authorInit: 'ZA',
-    date: '25 Nisan 2026 · 14:32', readTime: '6 dk okuma',
-    body: `
-      <p>Türkiye Büyük Millet Meclisi, aylardır kamuoyunda tartışılan <strong>Yapay Zeka Düzenleme Yasası'nı</strong> bugün oybirliğiyle kabul etti. Yasa, Avrupa Birliği'nin YZ Yasası'ndan ilham almakla birlikte Türkiye'ye özgü yenilikler içeriyor.</p>
-      <div class="article-quote">"Bu yasa, Türkiye'yi yapay zeka alanında küresel aktörler arasına taşıyacak ilk ciddi adımdır." — Sanayi Bakanı</div>
-      <p>Yasanın en dikkat çekici maddesi, yüksek riskli YZ sistemlerinin kullanımı için <strong>zorunlu denetim mekanizması</strong>. Sağlık, eğitim ve güvenlik sektörlerinde faaliyet gösteren şirketlerin, sistemlerini bağımsız kuruluşlara denetlettirmesi gerekecek.</p>
-      <p>Öte yandan muhalefet, yasanın inovasyon üzerindeki olası kısıtlayıcı etkilerini sorguladı. Teknoloji şirketleri temsilcileri uyum maliyetlerinin KOBİ'leri zorlayabileceğini dile getirdi.</p>
-      <p>Yasa, Cumhurbaşkanı onayından sonra <strong>1 Ocak 2027</strong> itibarıyla yürürlüğe girecek.</p>`
-  },
-  'borsa-rekor': {
-    emoji: '💹',
-    heroBg: 'linear-gradient(135deg, #1a1000, #201400)',
-    cat: 'Ekonomi', catClass: 'cat-fin',
-    title: 'Borsa İstanbul Tarihi Zirveyi Gördü',
-    subtitle: 'BIST 100 endeksi bugün 10.847 puanla rekor tazeledi.',
-    author: 'Mert Kaya', authorInit: 'MK',
-    date: '25 Nisan 2026 · 16:10', readTime: '4 dk okuma',
-    body: `
-      <p>Borsa İstanbul bugün tarihi bir eşiği aşarak <strong>10.847 puana</strong> ulaştı. Analistler bu yükselişi yabancı yatırımcıların geri dönüşü ve olumlu enflasyon verilerine bağlıyor.</p>
-      <div class="article-quote">"Piyasa uzun süredir beklenen güven ortamını nihayet hissediyor." — Baş Ekonomist, Garanti BBVA</div>
-      <p>En çok yükselen sektörler arasında bankacılık, enerji ve teknoloji şirketleri yer alıyor. Yabancı yatırımcı payının son üç ayda <strong>%8,4'ten %11,2'ye</strong> yükseldiği açıklandı.</p>
-      <p>Merkez Bankası'nın dün faizi sabit bırakması ve önümüzdeki çeyrekte tek haneli enflasyon beklentisi piyasaları olumlu etkiledi.</p>`
-  },
-  'deprem-tatbikat': {
-    emoji: '🏗️',
-    heroBg: 'linear-gradient(135deg, #101830, #0a2020)',
-    cat: 'Gündem', catClass: 'cat-sci',
-    title: '3 Milyonluk Deprem Tatbikatı: İstanbul Hazır mı?',
-    subtitle: 'Türkiye tarihinin en büyük deprem tatbikatı bugün İstanbul\'da gerçekleştirildi.',
-    author: 'Ayşe Demir', authorInit: 'AD',
-    date: '25 Nisan 2026 · 12:00', readTime: '3 dk okuma',
-    body: `
-      <p>İstanbul'da bugün gerçekleştirilen tatbikata <strong>3,2 milyon kişi</strong> katıldı. Sabah 10:41'de verilen alarm sinyaliyle birlikte milyonlarca İstanbullu depremi simüle eden tatbikatın protokollerini uygulamaya geçti.</p>
-      <div class="article-quote">"İstanbul 2030 yılına kadar depreme hazır olacak." — İBB Başkanı</div>
-      <p>Tatbikat kapsamında <strong>847 okul, 324 hastane</strong> ve onlarca alışveriş merkezi test edildi. İlk bulgulara göre toplanma alanlarına erişimde bazı sorunlar yaşandı.</p>
-      <p>AFAD Başkanı, tatbikatın sonuçlarının önümüzdeki hafta kamuoyuyla paylaşılacağını açıkladı.</p>`
-  },
-  'mars-kesfet': {
-    emoji: '🔭',
-    heroBg: 'linear-gradient(135deg, #080820, #0a1810)',
-    cat: 'Uzay', catClass: 'cat-sci',
-    title: 'NASA Mars\'ta Su İzleri Bulduğunu Duyurdu',
-    subtitle: 'Perseverance rover\'ı Mars yüzeyinin 2 metre altında tuzlu su birikim izleri tespit etti.',
-    author: 'Dr. Emre Şen', authorInit: 'EŞ',
-    date: '25 Nisan 2026 · 11:15', readTime: '5 dk okuma',
-    body: `
-      <p>NASA'nın Perseverance aracı, Mars'ın Jezero Krateri bölgesinde yüzeyin yaklaşık <strong>2 metre altında</strong> tuzlu su varlığına işaret eden güçlü izler tespit etti. Bulgular Nature dergisinde yayımlandı.</p>
-      <div class="article-quote">"Bu bulgu, Mars'ta geçmiş ya da mevcut yaşam olasılığını ciddi biçimde güçlendiriyor." — NASA Bilim Direktörü</div>
-      <p>Araştırmacılar, tespit edilen mineralojik yapının suyun dönemsel olarak yüzeye çıkıp tekrar donduğuna işaret ettiğini belirtti. Benzer yapılar daha önce yalnızca Dünya'nın kutup bölgelerinde gözlemlenmişti.</p>
-      <p>Keşif, 2030 için planlanan insanlı Mars misyonunun güzergâh kararlarını doğrudan etkileyebilir.</p>`
-  },
-  'secim-anket': {
-    emoji: '🗳️',
-    heroBg: 'linear-gradient(135deg, #280810, #200612)',
-    cat: 'Siyaset', catClass: 'cat-pol',
-    title: 'Son Seçim Anketi: Sürpriz Sonuçlar Açıklandı',
-    subtitle: 'MAK Danışmanlık\'ın son anketi beklenmedik bir tabloyu ortaya koyuyor.',
-    author: 'Selin Yıldız', authorInit: 'SY',
-    date: '25 Nisan 2026 · 09:30', readTime: '3 dk okuma',
-    body: `
-      <p>MAK Danışmanlık tarafından gerçekleştirilen ve <strong>5.200 kişiyle</strong> yüz yüze yapılan anket, muhalefet bloğunun birleşik bir liste ile seçimlere girdiği senaryoda ciddi bir yükseliş kaydettiğini gösteriyor.</p>
-      <div class="article-quote">"Seçmen kitlesi net bir değişim mesajı veriyor; bu sinyali ciddiye almak gerekiyor." — Siyaset Bilimci Prof. Dr. Ahmet Çelik</div>
-      <p>Anket bulgularına göre ekonomik endişeler seçmen gündeminin başında yer almaya devam ediyor. Katılımcıların <strong>%67'si</strong> geçim sıkıntısını birinci öncelikli sorun olarak tanımladı.</p>
-      <p>Siyasi partiler ankete ilişkin değerlendirmelerini basın toplantılarıyla kamuoyuyla paylaştı.</p>`
-  },
-  'yesil-enerji': {
-    emoji: '🌿',
-    heroBg: 'linear-gradient(135deg, #082008, #061810)',
-    cat: 'Çevre', catClass: 'cat-eco',
-    title: 'Türkiye Yeşil Enerji Üretiminde Rekor Kırdı',
-    subtitle: 'Nisan ayında yenilenebilir kaynaklar toplam elektrik üretiminin %61\'ini karşıladı.',
-    author: 'Can Öztürk', authorInit: 'CÖ',
-    date: '25 Nisan 2026 · 08:45', readTime: '4 dk okuma',
-    body: `
-      <p>Enerji ve Tabii Kaynaklar Bakanlığı verilerine göre Nisan 2026'da yenilenebilir enerji kaynakları, toplam elektrik üretiminin <strong>%61'ini</strong> karşılayarak tarihsel rekor kırdı.</p>
-      <div class="article-quote">"Bu oran Türkiye'nin 2035 yeşil enerji hedefine çok daha hızlı ulaşabileceğine işaret ediyor." — Enerji Bakanı</div>
-      <p>Rekorun kırılmasında güneş enerjisindeki patlama belirleyici rol oynadı. Konya Ovası'nda devreye giren <strong>3.200 MW'lık güneş tarlası</strong>, yalnızca nisan ayında 680.000 haneye yetecek enerji üretti.</p>
-      <p>Rüzgar enerjisi de Ege ve Marmara kıyılarındaki yeni türbinlerle üretimine önemli katkı sağladı. Uzmanlar, bu trendin sanayi elektrik faturalarını da düşüreceğini öngörüyor.</p>`
-  },
-  'galatasaray': {
-    emoji: '🏆',
-    heroBg: 'linear-gradient(135deg, #201008, #181006)',
-    cat: 'Spor', catClass: 'cat-pol',
-    title: 'Galatasaray 5. Kez Şampiyon: Taraftarlar Sokaklara Döküldü',
-    subtitle: 'Sarı-kırmızılılar, Beşiktaş karşısındaki galibiyetle şampiyonluğunu ilan etti.',
-    author: 'Bora Atmaca', authorInit: 'BA',
-    date: '25 Nisan 2026 · 22:15', readTime: '2 dk okuma',
-    body: `
-      <p>Galatasaray, Beşiktaş'ı <strong>3-1</strong> mağlup ederek Süper Lig'de art arda <strong>5. şampiyonluğunu</strong> kazandı. Maç sonrası binlerce taraftar İstanbul sokaklarını kırmızı-sarıya boyadı.</p>
-      <div class="article-quote">"Bu kupayı başta taraftarlarımıza olmak üzere emeği geçen herkese armağan ediyorum." — Teknik Direktör</div>
-      <p>Maçın golcüleri Icardi (2 gol) ve Zaha (1 gol) oldu. Beşiktaş'ın tek golü Rafa Silva'dan geldi. Maç boyunca üstün oynayan Galatasaray, 58. dakikada aldığı kırmızı karta rağmen skoru korumayı başardı.</p>
-      <p>Şampiyonluk kutlamaları gece boyunca İstanbul'un farklı semtlerinde devam etti. Polis açıklamasına göre kutlamalara katılan kişi sayısı <strong>500 bini</strong> aştı.</p>`
-  },
-  'ab-zirve': {
-    emoji: '🌍',
-    heroBg: 'linear-gradient(135deg, #0a1020, #101830)',
-    cat: 'Dış Politika', catClass: 'cat-pol',
-    title: 'Türkiye-AB Zirvesinde Tarihi Adım',
-    subtitle: 'Brüksel\'deki zirve, iki taraf arasında onlarca yıllık donukluğu çözebilir.',
-    author: 'Nilüfer Başaran', authorInit: 'NB',
-    date: '25 Nisan 2026 · 10:00', readTime: '5 dk okuma',
-    body: `
-      <p>Brüksel'de düzenlenen Türkiye-AB Zirvesi, Dışişleri Bakanlarının katılımıyla bugün başladı. Gündemde vize serbestisi, gümrük birliğinin güncellenmesi ve yeni işbirliği çerçevesi yer alıyor.</p>
-      <div class="article-quote">"Bu zirve, on yıllardır beklediğimiz gerçek müzakere sürecinin fitilini ateşleyebilir." — AB Konsey Başkanı</div>
-      <p>Türkiye, vize serbestisi konusunda somut bir takvim talep ederken AB tarafı, <strong>hukuk devleti reformlarında</strong> ölçülebilir ilerleme kaydedilmesi koşulunu masaya getirdi.</p>
-      <p>Zirvenin sonunda imzalanması beklenen mutabakat metninin içeriği merak konusu olmaya devam ediyor. Diplomatik kaynaklar görüşmelerin olumlu bir atmosferde sürdüğünü aktarıyor.</p>`
-  },
-  'gs-kupa': {
-    emoji: '🏟️',
-    heroBg: 'linear-gradient(135deg, #1a0808, #201010)',
-    cat: 'Spor', catClass: 'cat-pol',
-    title: 'Galatasaray Şampiyonluk Kutlaması Canlı Yayında',
-    subtitle: 'Ali Sami Yen Spor Kompleksi\'nde tarihi tören başladı.',
-    author: 'Bora Atmaca', authorInit: 'BA',
-    date: '25 Nisan 2026 · 23:00', readTime: '2 dk okuma',
-    body: `
-      <p>Galatasaray, şampiyonluk kupasını bugün gece Ali Sami Yen Stadyumu'nda gerçekleştirilen büyük törenle kaldırdı. <strong>52.000 taraftar</strong> tribünleri doldururken milyonlarca kişi canlı yayını takip etti.</p>
-      <div class="article-quote">"Bu kupa bizim değil; her maç tribünleri dolduran taraftarlarımızın!" — Kaptan Seferovic</div>
-      <p>Tören boyunca gökyüzünü aydınlatan havai fişekler ve lazer gösterisi İstanbul Boğazı'ndan bile görülebildi. Kutlamalar gece yarısı sona erdi.</p>`
-  }
-};
+let totalScore = 0;
 
-/* ─── Aktif sayfa takibi ─── */
-let previousPage = 'home';
-let currentPage  = 'home';
-
-/* ─── Tarih/saat widget ─── */
-function updateDate() {
-  const now = new Date();
-  const opts = { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
-  document.getElementById('live-date').textContent = now.toLocaleDateString('tr-TR', opts);
-}
-updateDate();
-setInterval(updateDate, 60000);
-
-/* ─── Sayfa geçişi ─── */
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  const navEl = document.getElementById('nav-' + name);
-  if (navEl) navEl.classList.add('active');
-  previousPage = currentPage;
-  currentPage  = name;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function addScore(n) {
+  totalScore += n;
+  document.getElementById('score-display').textContent = totalScore;
+  const lvls = [[0,'Beginner'],[50,'Elementary'],[120,'Intermediate'],[200,'Advanced']];
+  let lv = 'Beginner';
+  for (const [t,l] of lvls) { if (totalScore >= t) lv = l; }
+  document.getElementById('level-display').textContent = lv;
 }
 
-/* ─── Makale göster ─── */
-function showArticle(id) {
-  const a = articles[id];
-  if (!a) return;
-  document.getElementById('article-content').innerHTML = `
-    <div class="article-hero" style="">
-      <div class="article-hero-bg" style="background:${a.heroBg}"></div>
-      <span class="article-hero-emoji">${a.emoji}</span>
-    </div>
-    <div class="article-content">
-      <span class="article-cat side-cat ${a.catClass}">${a.cat}</span>
-      <div class="article-title">${a.title}</div>
-      <div class="article-subtitle">${a.subtitle}</div>
-      <div class="article-meta">
-        <div class="article-author">
-          <div class="author-avatar">${a.authorInit}</div>
-          <div>
-            <div class="author-name">${a.author}</div>
-            <div class="author-date">${a.date}</div>
-          </div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);">📖 ${a.readTime}</div>
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((el,i)=>{ el.classList.toggle('active', ['riddles','match','fill'][i]===t); });
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+t).classList.add('active');
+}
+
+/* ===== RIDDLES ===== */
+const riddles = [
+  { q:"I have hands but I cannot clap.\nI have a face but I cannot smile.\nWhat am I?", a:"clock", hint:"You look at me to know the time.", tr:"Ellerin var ama alkış tutamam, yüzüm var ama gülümseyemem. Neyim?", category:"Objects", translation:"Saat" },
+  { q:"The more you take, the more you leave behind.\nWhat am I?", a:"footsteps", hint:"Think about walking on sand.", tr:"Ne kadar çok alırsan, o kadar çok geride bırakırsın.", category:"Nature", translation:"Ayak izleri" },
+  { q:"I speak without a mouth and hear without ears.\nI have no body, but I come alive with wind.\nWhat am I?", a:"echo", hint:"Shout in a mountain and you'll hear me.", tr:"Ağzım yok konuşurum, kulağım yok duyarım.", category:"Nature", translation:"Yankı" },
+  { q:"I am always in front of you but can't be seen.\nWhat am I?", a:"future", hint:"Yesterday is past, today is present, tomorrow is…", tr:"Her zaman önünde ama hiç göremezsin beni. Neyim?", category:"Abstract", translation:"Gelecek" },
+  { q:"The more you have of it, the less you see.\nWhat am I?", a:"darkness", hint:"Turn off the lights at night.", tr:"Ne kadar çok olursa, o kadar az görürsün. Neyim?", category:"Nature", translation:"Karanlık" },
+  { q:"I have cities, but no houses live there.\nI have mountains, but no trees grow there.\nI have water, but no fish swim.\nWhat am I?", a:"map", hint:"Explorers carry me on adventures.", tr:"Şehirlerim var ama ev yok, dağlarım var ama ağaç yok. Neyim?", category:"Objects", translation:"Harita" },
+];
+
+let riddleDone = 0;
+
+function buildRiddles() {
+  const c = document.getElementById('riddle-container');
+  c.innerHTML = '';
+  riddles.forEach((r, i) => {
+    c.innerHTML += `
+    <div class="riddle-card" id="rcard-${i}">
+      <div class="riddle-number">Riddle ${i+1} of ${riddles.length}</div>
+      <div class="riddle-category">${r.category}</div>
+      <div class="riddle-text">${r.q.replace(/\n/g,'<br>')}</div>
+      <div class="riddle-hint" id="rhint-${i}">💡 Hint: ${r.hint}<br><span style="font-size:12px;opacity:.7">Türkçe: ${r.tr}</span></div>
+      <div class="answer-row">
+        <input class="answer-input" id="rinput-${i}" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')checkRiddle(${i})">
+        <button class="btn btn-hint" onclick="showHint(${i})">Hint 💡</button>
+        <button class="btn btn-primary" onclick="checkRiddle(${i})">Check ✓</button>
       </div>
-      <div class="article-body">${a.body}</div>
+      <div class="feedback" id="rfb-${i}">
+        <div class="feedback-icon" id="rfbicon-${i}"></div>
+        <div>
+          <div id="rfbtext-${i}"></div>
+          <div class="translation" id="rfbtr-${i}"></div>
+        </div>
+      </div>
     </div>`;
-  showPage('article');
+  });
+  updateRiddleProgress();
 }
 
-/* ─── Geri dön ─── */
-function goBack() {
-  showPage(previousPage === 'article' ? 'home' : previousPage);
+function showHint(i) {
+  document.getElementById('rhint-'+i).classList.add('shown');
 }
 
-/* ─── Sekme geçişleri ─── */
-document.querySelectorAll('.page-nav').forEach(nav => {
-  nav.querySelectorAll('.page-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      nav.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
+function checkRiddle(i) {
+  const inp = document.getElementById('rinput-'+i);
+  const fb = document.getElementById('rfb-'+i);
+  const val = inp.value.trim().toLowerCase();
+  const correct = riddles[i].a.toLowerCase();
+  const fbText = document.getElementById('rfbtext-'+i);
+  const fbIcon = document.getElementById('rfbicon-'+i);
+  const fbTr = document.getElementById('rfbtr-'+i);
+
+  if (!val) return;
+
+  if (val === correct || correct.split(' ').includes(val)) {
+    inp.classList.add('correct');
+    inp.disabled = true;
+    fb.classList.add('show','correct-fb');
+    fbIcon.textContent = '✓';
+    fbText.textContent = 'Correct! The answer is "' + riddles[i].a + '"';
+    fbTr.textContent = '🇹🇷 Türkçe: ' + riddles[i].translation;
+    addScore(15);
+    riddleDone++;
+    updateRiddleProgress();
+    if (riddleDone === riddles.length) {
+      setTimeout(() => document.getElementById('riddle-congrats').classList.add('show'), 600);
+    }
+  } else {
+    inp.classList.remove('wrong');
+    void inp.offsetWidth;
+    inp.classList.add('wrong');
+    fb.classList.add('show','wrong-fb');
+    fb.classList.remove('correct-fb');
+    fbIcon.textContent = '✗';
+    fbText.textContent = 'Not quite! Try again.';
+    fbTr.textContent = '';
+    setTimeout(() => { inp.classList.remove('wrong'); fb.classList.remove('show','wrong-fb'); }, 1200);
+  }
+}
+
+function updateRiddleProgress() {
+  const pct = (riddleDone / riddles.length) * 100;
+  document.getElementById('riddle-progress').style.width = pct + '%';
+  document.getElementById('riddle-progress-text').textContent = riddleDone + ' / ' + riddles.length;
+}
+
+/* ===== WORD MATCH ===== */
+const matchData = [
+  {en:'Apple', tr:'Elma'}, {en:'Sun', tr:'Güneş'}, {en:'Book', tr:'Kitap'},
+  {en:'Water', tr:'Su'}, {en:'House', tr:'Ev'}, {en:'Tree', tr:'Ağaç'},
+  {en:'Cat', tr:'Kedi'}, {en:'Happy', tr:'Mutlu'}
+];
+let matchSelected = null;
+let matchedCount = 0;
+
+function buildMatch() {
+  const left = [...matchData].sort(()=>Math.random()-0.5);
+  const right = [...matchData].sort(()=>Math.random()-0.5);
+  const c = document.getElementById('match-container');
+  c.innerHTML = `
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Select an English word, then its Turkish meaning.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">English 🇬🇧</div>
+        <div id="match-left" class="word-grid" style="grid-template-columns:1fr"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Turkish 🇹🇷</div>
+        <div id="match-right" class="word-grid" style="grid-template-columns:1fr"></div>
+      </div>
+    </div>
+    <div id="match-fb" style="margin-top:14px;font-size:14px;font-weight:500;color:var(--muted)"></div>`;
+
+  left.forEach(w => {
+    const el = document.createElement('div');
+    el.className = 'word-card';
+    el.textContent = w.en;
+    el.dataset.word = w.en;
+    el.dataset.side = 'left';
+    el.onclick = () => selectMatchCard(el);
+    document.getElementById('match-left').appendChild(el);
+  });
+  right.forEach(w => {
+    const el = document.createElement('div');
+    el.className = 'word-card';
+    el.textContent = w.tr;
+    el.dataset.word = w.tr;
+    el.dataset.side = 'right';
+    el.onclick = () => selectMatchCard(el);
+    document.getElementById('match-right').appendChild(el);
+  });
+}
+
+function selectMatchCard(el) {
+  if (el.classList.contains('matched')) return;
+  if (!matchSelected) {
+    matchSelected = el;
+    el.classList.add('selected');
+  } else {
+    if (matchSelected.dataset.side === el.dataset.side) {
+      matchSelected.classList.remove('selected');
+      matchSelected = el;
+      el.classList.add('selected');
+      return;
+    }
+    const enWord = matchSelected.dataset.side==='left' ? matchSelected.dataset.word : el.dataset.word;
+    const trWord = matchSelected.dataset.side==='right' ? matchSelected.dataset.word : el.dataset.word;
+    const pair = matchData.find(d=>d.en===enWord);
+    const isMatch = pair && pair.tr === trWord;
+
+    if (isMatch) {
+      matchSelected.classList.remove('selected'); matchSelected.classList.add('matched');
+      el.classList.add('matched');
+      document.getElementById('match-fb').textContent = '✅ Correct! ' + enWord + ' = ' + trWord;
+      document.getElementById('match-fb').style.color = 'var(--green)';
+      addScore(10);
+      matchedCount++;
+      if (matchedCount === matchData.length) {
+        setTimeout(()=>document.getElementById('match-congrats').classList.add('show'),600);
+      }
+    } else {
+      matchSelected.classList.remove('selected');
+      matchSelected.classList.add('wrong-match');
+      el.classList.add('wrong-match');
+      document.getElementById('match-fb').textContent = '❌ Wrong pair. Try again!';
+      document.getElementById('match-fb').style.color = 'var(--red)';
+      setTimeout(()=>{ matchSelected.classList.remove('wrong-match'); el.classList.remove('wrong-match'); },700);
+    }
+    matchSelected = null;
+  }
+}
+
+/* ===== FILL IN BLANK ===== */
+const fillData = [
+  { sentence: "The ___ shines brightly every morning.", answer: "sun", options: ["sun","rain","book","cat"], tr: "Her sabah ___ parlak parlar." },
+  { sentence: "She loves to read ___ before bed.", answer: "books", options: ["books","apples","clouds","shoes"], tr: "Yatmadan önce ___ okumayı sever." },
+  { sentence: "We drink ___ every day to stay healthy.", answer: "water", options: ["water","music","time","stone"], tr: "Sağlıklı kalmak için her gün ___ içeriz." },
+  { sentence: "The ___ barked loudly at the stranger.", answer: "dog", options: ["dog","tree","moon","cup"], tr: "___ yabancıya yüksek sesle havladı." },
+  { sentence: "In spring, the ___ are full of colorful flowers.", answer: "gardens", options: ["gardens","skies","rivers","clouds"], tr: "İlkbaharda ___ renkli çiçeklerle dolar." },
+];
+
+let fillDone = 0;
+
+function buildFill() {
+  const c = document.getElementById('fill-container');
+  c.innerHTML = '';
+  fillData.forEach((d,i) => {
+    const parts = d.sentence.split('___');
+    c.innerHTML += `
+    <div class="riddle-card" id="fcard-${i}">
+      <div class="riddle-number">Sentence ${i+1} of ${fillData.length}</div>
+      <div class="fill-sentence">
+        ${parts[0]}<input class="blank-input" id="finput-${i}" placeholder="???" autocomplete="off" onkeydown="if(event.key==='Enter')checkFill(${i})">${parts[1]}
+      </div>
+      <div class="translation" style="display:block;margin-bottom:16px">🇹🇷 ${d.tr.replace('___','___')}</div>
+      <div class="word-options" id="foptions-${i}"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="checkFill(${i})">Check ✓</button>
+      </div>
+      <div class="feedback" id="ffb-${i}">
+        <div class="feedback-icon" id="ffbicon-${i}"></div>
+        <div id="ffbtext-${i}"></div>
+      </div>
+    </div>`;
+  });
+
+  fillData.forEach((d,i)=>{
+    const opts = [...d.options].sort(()=>Math.random()-0.5);
+    const cont = document.getElementById('foptions-'+i);
+    opts.forEach(o=>{
+      const btn = document.createElement('div');
+      btn.className='word-option';
+      btn.textContent=o;
+      btn.onclick=()=>{
+        if(btn.classList.contains('used'))return;
+        document.getElementById('finput-'+i).value=o;
+        cont.querySelectorAll('.word-option').forEach(b=>b.classList.remove('selected-opt'));
+        btn.style.borderColor='var(--gold)';
+      };
+      cont.appendChild(btn);
     });
   });
-});
+  updateFillProgress();
+}
+
+function checkFill(i) {
+  const inp = document.getElementById('finput-'+i);
+  const fb = document.getElementById('ffb-'+i);
+  const val = inp.value.trim().toLowerCase();
+  const correct = fillData[i].answer.toLowerCase();
+  const fbText = document.getElementById('ffbtext-'+i);
+  const fbIcon = document.getElementById('ffbicon-'+i);
+
+  if (!val) return;
+
+  if (val === correct) {
+    inp.classList.add('correct-blank');
+    inp.disabled = true;
+    fb.classList.add('show','correct-fb');
+    fb.classList.remove('wrong-fb');
+    fbIcon.textContent = '✓';
+    fbText.textContent = 'Correct! "' + fillData[i].answer + '" is the right word.';
+    addScore(12);
+    fillDone++;
+    updateFillProgress();
+    document.getElementById('foptions-'+i).querySelectorAll('.word-option').forEach(b=>{
+      if(b.textContent===fillData[i].answer){ b.classList.add('used'); b.style.borderColor='var(--green)'; b.style.color='var(--green)'; }
+    });
+    if (fillDone === fillData.length) {
+      setTimeout(()=>document.getElementById('fill-congrats').classList.add('show'),600);
+    }
+  } else {
+    inp.classList.remove('wrong-blank');
+    void inp.offsetWidth;
+    inp.classList.add('wrong-blank');
+    fb.classList.add('show','wrong-fb');
+    fb.classList.remove('correct-fb');
+    fbIcon.textContent = '✗';
+    fbText.textContent = 'Not quite! Try another word.';
+    setTimeout(()=>{ inp.classList.remove('wrong-blank'); fb.classList.remove('show','wrong-fb'); inp.value=''; },1200);
+  }
+}
+
+function updateFillProgress() {
+  const pct = (fillDone / fillData.length) * 100;
+  document.getElementById('fill-progress').style.width = pct + '%';
+  document.getElementById('fill-progress-text').textContent = fillDone + ' / ' + fillData.length;
+}
+
+function restartAll() {
+  totalScore = 0; riddleDone = 0; matchedCount = 0; fillDone = 0; matchSelected = null;
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('level-display').textContent = 'Beginner';
+  document.getElementById('riddle-congrats').classList.remove('show');
+  document.getElementById('match-congrats').classList.remove('show');
+  document.getElementById('fill-congrats').classList.remove('show');
+  buildRiddles(); buildMatch(); buildFill();
+  switchTab('riddles');
+}
+
+buildRiddles();
+buildMatch();
+buildFill();
 </script>
 </body>
 </html>
